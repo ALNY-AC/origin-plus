@@ -1,0 +1,121 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    // color: rgb(213, 213, 213);
+    color: #333;
+    font-family: 'system-ui';
+    // font-size: 12px;
+}
+
+a {
+    // color: rgb(213, 213, 213);
+    color: #333;
+    // text-decoration: none;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    // background-color: rgb(0, 0, 0);
+}
+
+small {
+    font-weight: normal;
+}
+
+
+.clearfix {
+
+    &:before,
+    &:after {
+        content: " ";
+        display: table;
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
+}
+
+.form-img {
+    width: 300px;
+    max-width: 100%;
+    display: block;
+}
+
+.window-scrollbar {
+    overflow-y: auto;
+
+    &::-webkit-scrollbar-track-piece {
+        //滚动条凹槽的颜色，还可以设置边框属性
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar {
+        //滚动条的宽度
+        width: 1px;
+        height: 1px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        //滚动条的设置
+        background-color: #ddd;
+        background-clip: padding-box;
+        min-height: 28px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: #ddd;
+    }
+}
+
+
+
+.block {
+    display: block;
+    width: 100%;
+}
+
+
+.paper-content {
+    word-break: break-all !important;
+    word-wrap: break-word !important;
+
+    * {
+        word-break: break-all !important;
+        word-wrap: break-word !important;
+    }
+
+    * {
+        img {
+            max-width: 100% !important;
+        }
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+}

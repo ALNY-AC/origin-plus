@@ -1,0 +1,21 @@
+// $--color-success: #01A89F;
+// $--color-primary: #51B0BE;
+// $--color-danger: #F55D54;
+/* 改变 icon 字体路径变量，必需 */
+
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+// $--color-primary: rgb(30, 30, 30) !default;
+
+// $--color-white:rgb(255, 255, 255) !default;
+// $--color-text-regular:rgb(210, 210, 210);
+
+
+// $--background-color-base: rgb(51, 51, 51) !default;
+// $--message-background-color: $--background-color-base !default;
+
+// $--switch-on-color: rgb(209, 209, 209) !default;
+// $--switch-off-color: $--color-primary !default;
+// .el-notification
+
+@import "~element-ui/packages/theme-chalk/src/index";
