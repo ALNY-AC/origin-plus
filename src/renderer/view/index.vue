@@ -1,110 +1,112 @@
+
 <template>
   <div id="index">
-    <div class="df">
-      <el-form label-position="top" size="mini">
-        <el-form-item v-for="(prop,i) in props" :key="i" :label="`属性${i}`">
-          <div class="pro-panel" v-for="(p,x) in prop" :key="x">
-            <div class="prop-title">{{x}}</div>
-            <div v-if="p.type=='text'">
-              <el-input v-model="prop[x].value"></el-input>
-            </div>
-            <div v-if="p.type=='radio'">
-              <el-radio-group v-model="prop[x].value">
-                <el-radio :label="opt" v-for="(opt,j) in p.option" :key="j">{{opt}}</el-radio>
-              </el-radio-group>
-            </div>
-          </div>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="push()">增加字段</el-button>
-        </el-form-item>
-      </el-form>
-      <pre v-html="props"></pre>
+    <h4>Origin-Plus</h4>
+    <div></div>
+    <div class="panel">
+      <div id="container"></div>
+      <div class="output">
+        <pre>{{output}}</pre>
+      </div>
     </div>
-
-    <el-table ref="table" :data="dataList" height="100px">
-      <el-table-column
-        v-for="(col,i) in props"
-        :key="i"
-        :prop="col.prop.value"
-        :label="col.label.value"
-        :width="col.width.value"
-      ></el-table-column>
-    </el-table>
   </div>
 </template>
+
 <script>
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+
 export default {
   data() {
     return {
-      props: [],
-      dataList: [
-        { id: "1", name: "asd" },
-        { id: "2", name: "a213ewsd" },
-        { id: "2", name: "a213ewsd" }
-      ]
+      output: '',
+      value: ''
     };
   },
   mounted() {
-    this.props.push(this.getTableEl());
+
+    const monacoInstance = monaco.editor.create(document.getElementById("container"), {
+      // value: "function hello() {\n\talert('Hello world!');\n}",
+      language: "javascript"
+    });
+
+    monacoInstance.onDidChangeModelContent((event) => {
+      let newValue = monacoInstance.getValue();
+      this.value = newValue;
+      this.handle();
+    })
+
   },
   methods: {
-    push() {
-      this.props.push(this.getTableEl());
+    handle() {
+      // this.output = this.option(this.value);
+
+
+      this.output = this.form(this.value);
+
     },
-    getTableEl() {
-      let tableEl = {
-        prop: this.getProp("text"),
-        label: this.getProp("text"),
-        width: this.getProp("text"),
-        align: this.getProp("radio", ["left", "center", "right"]),
-        fixed: this.getProp("radio", ["", "true", "left", "right"])
-      };
-      return tableEl;
+    form(v) {
+      // <el-form>
+      //   <el-form-item label="" prop="">
+      //     <el-input v-model=""></el-input>
+      //   </el-form-item>
+      // </el-form>
+      let temp = `<el-form-item prop="$0" label="$1" aaa="$2"></el-form-item>`;
+      let row = v.split('\n')
+        .filter(el => !!el)
+        .map(el => el.split(' ').filter(el => !!el))
+        .map(el => {
+          let newtemp = temp;
+          console.warn(el);
+          el.forEach((str, i) => {
+            let reg = new RegExp(`\\$${i}`, 'gim');
+            newtemp = newtemp.replace(reg, str);
+          });
+          newtemp = newtemp.replace(/\$[0-9]+/gim, '');
+          return newtemp;
+        });
+
+      row = row.join('\n');
+      return row;
     },
-    getProp(type = "text", option = []) {
-      let prop = {
-        type: type,
-        option: option,
-        value: ""
-      };
-      return prop;
+    option(v) {
+      let row = v.split('\n')
+        .filter(el => !!el)
+        .map(el => el.split(' ').filter(el => !!el))
+        .map(el => `<el-option value="${el[0]}" label="${el[1]}"></el-option>`);
+
+      if (row.length > 0) {
+        row.unshift('<el-option label="全部"></el-option>');
+      }
+      row = row.join('\n');
+      return row;
     }
   },
   watch: {
-    props: {
-      handler() {
-        this.$refs["table"].doLayout();
-      },
-      deep: true
-    }
   }
 };
 </script>
 <style lang="scss" scoped>
 #index {
-  padding: 25px;
+  padding: 0 25px;
   background-color: #f6f6f6;
-}
-.pro-panel {
-  background-color: #ffffff;
-  padding: 10px;
-  border-radius: 5px;
-}
-.prop-title {
-  font-size: 11px;
-  color: #666;
-}
-.df {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   display: flex;
-  .el-form {
+  flex-direction: column;
+  .panel {
     flex: 1;
-  }
-  pre {
-    margin-left: 10px;
-    background-color: #999999;
-    padding: 10px;
-    border-radius: 5px;
+    display: flex;
+    #container {
+      flex: 1;
+    }
+    .output {
+      flex: 1;
+      background-color: #f1f1f1;
+      font-size: 14px;
+      padding: 10px;
+      color: #333;
+    }
   }
 }
 </style>
