@@ -2,11 +2,11 @@
 <template>
   <div id="index">
     <h4>Origin-Plus</h4>
-    <div></div>
+
     <div class="panel">
       <div id="container"></div>
       <div class="output">
-        <pre>{{output}}</pre>
+        <pre v-for="(item,i) in output" :key="i">{{item}}</pre>
       </div>
     </div>
   </div>
@@ -14,11 +14,12 @@
 
 <script>
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import TempTool from './TempTool';
 
 export default {
   data() {
     return {
-      output: '',
+      output: [],
       value: ''
     };
   },
@@ -35,51 +36,23 @@ export default {
       this.handle();
     })
 
+    monacoInstance.setValue(new Array(3).fill('姓名 name aaa').join('\n'));
+
   },
   methods: {
     handle() {
-      // this.output = this.option(this.value);
+      this.output = [];
 
+      // this.output.push(new TempTool().get('option', this.value, (row) => {
+      //   if (row.length > 0) {
+      //     row.unshift('<el-option label="全部"></el-option>');
+      //   }
+      //   return row;
+      // }).join('\n'));
 
-      this.output = this.form(this.value);
+      this.output.push(new TempTool().get('form', this.value).join('\n'));
 
     },
-    form(v) {
-      // <el-form>
-      //   <el-form-item label="" prop="">
-      //     <el-input v-model=""></el-input>
-      //   </el-form-item>
-      // </el-form>
-      let temp = `<el-form-item prop="$0" label="$1" aaa="$2"></el-form-item>`;
-      let row = v.split('\n')
-        .filter(el => !!el)
-        .map(el => el.split(' ').filter(el => !!el))
-        .map(el => {
-          let newtemp = temp;
-          console.warn(el);
-          el.forEach((str, i) => {
-            let reg = new RegExp(`\\$${i}`, 'gim');
-            newtemp = newtemp.replace(reg, str);
-          });
-          newtemp = newtemp.replace(/\$[0-9]+/gim, '');
-          return newtemp;
-        });
-
-      row = row.join('\n');
-      return row;
-    },
-    option(v) {
-      let row = v.split('\n')
-        .filter(el => !!el)
-        .map(el => el.split(' ').filter(el => !!el))
-        .map(el => `<el-option value="${el[0]}" label="${el[1]}"></el-option>`);
-
-      if (row.length > 0) {
-        row.unshift('<el-option label="全部"></el-option>');
-      }
-      row = row.join('\n');
-      return row;
-    }
   },
   watch: {
   }
@@ -101,11 +74,17 @@ export default {
       flex: 1;
     }
     .output {
-      flex: 1;
-      background-color: #f1f1f1;
-      font-size: 14px;
-      padding: 10px;
-      color: #333;
+      flex: 2;
+      background-color: #343434;
+      overflow: auto;
+
+      pre {
+        color: #fff;
+        font-size: 14px;
+        border-bottom: 1px solid #222;
+        margin: 0;
+        padding: 10px;
+      }
     }
   }
 }
